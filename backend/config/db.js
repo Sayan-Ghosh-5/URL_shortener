@@ -1,11 +1,15 @@
 const mysql = require('mysql2');
+const path = require('path');
+
+// Load environment variables from .env file
+require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
 // Create a MySQL connection pool
 const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: 'root1234',        // Update with your MySQL password
-    database: 'url_shortener',
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'url_shortener',
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
@@ -19,12 +23,12 @@ async function initializeDatabase() {
     try {
         // Create the database if it doesn't exist
         const tempConnection = mysql.createConnection({
-            host: 'localhost',
-            user: 'root',
-            password: 'root1234'    // Update with your MySQL password
+            host: process.env.DB_HOST || 'localhost',
+            user: process.env.DB_USER || 'root',
+            password: process.env.DB_PASSWORD || ''
         }).promise();
 
-        await tempConnection.query('CREATE DATABASE IF NOT EXISTS url_shortener');
+        await tempConnection.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.DB_NAME || 'url_shortener'}\``);
         await tempConnection.end();
 
         // Create the urls table

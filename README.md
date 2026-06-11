@@ -22,10 +22,10 @@ A modern, full-stack URL shortener built with Node.js, Express, MySQL, and Vanil
 ### 1. Prerequisites
 Make sure you have **MySQL Server** installed and running on your local machine.
 
-### 2. Configure Database Credentials
-Open `backend/config/db.js` and set your local MySQL root password on lines 7 and 24:
-```javascript
-password: 'YOUR_MYSQL_PASSWORD'
+### 2. Configure Environment Variables
+Copy the `.env.example` file to a new file named `.env` and fill in your local MySQL root credentials:
+```env
+DB_PASSWORD=your_mysql_password
 ```
 
 ### 3. Install Dependencies

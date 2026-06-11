@@ -1,6 +1,10 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+
+// Load environment variables
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+
 const db = require('./config/db');
 const urlRoutes = require('./routes/urlRoutes');
 
