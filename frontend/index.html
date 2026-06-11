@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LinkShrink | Premium URL Shortener</title>
+    <meta name="description" content="Shorten URLs instantly with click tracking and real-time analytics. Free, fast, and reliable.">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,36 +13,59 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"
         integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
     <div class="background-glow"></div>
-    <div class="container">
-        <header>
-            <h1>LinkShrink</h1>
-            <p>Shorten your links, expand your reach.</p>
-        </header>
+    <div class="page-wrapper">
+        <div class="container">
+            <header>
+                <h1>LinkShrink</h1>
+                <p>Shorten your links, expand your reach.</p>
+            </header>
 
-        <main>
-            <div class="input-group">
-                <input type="url" id="originalUrl" placeholder="Paste your long URL here..." required>
-                <button id="shortenBtn">Shorten</button>
-            </div>
-
-            <div id="result" class="result-container hidden">
-                <div class="short-link-box">
-                    <span id="shortUrl"></span>
-                    <button id="copyBtn" class="icon-btn" title="Copy to clipboard">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                        </svg>
-                    </button>
+            <main>
+                <div class="input-group">
+                    <input type="url" id="originalUrl" placeholder="Paste your long URL here..." required>
+                    <button id="shortenBtn">Shorten</button>
                 </div>
-                <div id="qrcode" class="qr-code"></div>
+
+                <div id="result" class="result-container hidden">
+                    <div class="short-link-box">
+                        <span id="shortUrl"></span>
+                        <button id="copyBtn" class="icon-btn" title="Copy to clipboard">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div id="qrcode" class="qr-code"></div>
+                </div>
+            </main>
+        </div>
+
+        <section class="analytics-section" id="analyticsSection">
+            <div class="analytics-header">
+                <h2>Analytics Dashboard</h2>
+                <p>Top 10 most-clicked links</p>
             </div>
-        </main>
+            <div class="chart-wrapper">
+                <canvas id="analyticsChart"></canvas>
+            </div>
+            <div id="noDataMessage" class="no-data-message hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path>
+                    <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path>
+                    <path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path>
+                </svg>
+                <span>No click data yet. Shorten a URL and start sharing!</span>
+            </div>
+        </section>
 
         <footer>
             <p>&copy; 2025 LinkShrink. All rights reserved.</p>

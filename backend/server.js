@@ -15,21 +15,25 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 // Routes
 app.use('/api', urlRoutes);
 
-// Redirect route
-app.get('/:code', (req, res) => {
+// Redirect route with click tracking
+app.get('/:code', async (req, res) => {
     const { code } = req.params;
-    const sql = 'SELECT original_url FROM urls WHERE short_code = ?';
-    db.get(sql, [code], (err, row) => {
-        if (err) {
-            console.error(err.message);
-            return res.status(500).send('Server error');
-        }
-        if (row) {
-            res.redirect(row.original_url);
+    try {
+        // Increment click count
+        await db.query('UPDATE urls SET click_count = click_count + 1 WHERE short_code = ?', [code]);
+
+        // Fetch the original URL
+        const [rows] = await db.query('SELECT original_url FROM urls WHERE short_code = ?', [code]);
+
+        if (rows.length > 0) {
+            res.redirect(rows[0].original_url);
         } else {
             res.status(404).send('URL not found');
         }
-    });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
 });
 
 // Start server
