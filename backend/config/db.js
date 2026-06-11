@@ -4,16 +4,21 @@ const path = require('path');
 // Load environment variables from .env file
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
-// Create a MySQL connection pool
-const pool = mysql.createPool({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'url_shortener',
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-});
+// Determine pool configuration
+let pool;
+if (process.env.DATABASE_URL) {
+    pool = mysql.createPool(process.env.DATABASE_URL);
+} else {
+    pool = mysql.createPool({
+        host: process.env.DB_HOST || 'localhost',
+        user: process.env.DB_USER || 'root',
+        password: process.env.DB_PASSWORD || '',
+        database: process.env.DB_NAME || 'url_shortener',
+        waitForConnections: true,
+        connectionLimit: 10,
+        queueLimit: 0
+    });
+}
 
 // Use promise-based wrapper for async/await support
 const db = pool.promise();
@@ -21,15 +26,17 @@ const db = pool.promise();
 // Initialize database and create table if it doesn't exist
 async function initializeDatabase() {
     try {
-        // Create the database if it doesn't exist
-        const tempConnection = mysql.createConnection({
-            host: process.env.DB_HOST || 'localhost',
-            user: process.env.DB_USER || 'root',
-            password: process.env.DB_PASSWORD || ''
-        }).promise();
+        // Only attempt to auto-create database if not using a preconfigured cloud DATABASE_URL
+        if (!process.env.DATABASE_URL) {
+            const tempConnection = mysql.createConnection({
+                host: process.env.DB_HOST || 'localhost',
+                user: process.env.DB_USER || 'root',
+                password: process.env.DB_PASSWORD || ''
+            }).promise();
 
-        await tempConnection.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.DB_NAME || 'url_shortener'}\``);
-        await tempConnection.end();
+            await tempConnection.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.DB_NAME || 'url_shortener'}\``);
+            await tempConnection.end();
+        }
 
         // Create the urls table
         await db.query(`
